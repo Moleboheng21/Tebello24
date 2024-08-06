@@ -1,12 +1,11 @@
 from flask import Blueprint
-from ..controllers import User_controllers
+from ..controllers import User_controller
 
 
 app = Blueprint('signup', __name__)
-app = Blueprint('login', __name__)
 
-app.route("/")(User_controllers.index)
+app.route("/")(User_controller.index)
 
-app.route("/signup", methods=['POST','GET'])(User_controllers.signup)
+app.route("/signup", methods=['POST','GET'])(User_controller.signup)
 
-app.route("/login", methods=['POST','GET'])(User_controllers.login)
+app.route("/login", methods=['POST','GET'])(User_controller.login)
