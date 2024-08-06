@@ -2,7 +2,7 @@ from flask import Blueprint
 from ..controllers import User_controller
 
 
-app = Blueprint('user', __name__)
+app = Blueprint('products', __name__)
 
 # app.route("/")(User_controller.index)
 

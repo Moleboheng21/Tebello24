@@ -6,33 +6,47 @@ from .. import mongo
 def signup():
     if request.method == "POST":
         # Declare variables
-        name = jsonify.get["name"]
-        surname = jsonify.get["surname"]
-        email = jsonify.get["email"]
-        password = jsonify.get["password"]
+        data = request.get_json()
+        if not data:
+            return jsonify({"error": "No data provided."}), 400
+        
+        name = data.get("name")
+        surname = data.get("surname")
+        email = data.get("email")
+        password = data.get("password")
         
         # Check if the user exists in the database USING EMAIL
-        if User.user_exist(email):
-            flash("User with this email already exists.", "danger")
-            return jsonify({"error": "User with this email already exists."}), 400
+        if User.register_user(email):
+            return jsonify({"error": "User with this email already exists."}), 409
         
         # Adding user to the database
         client_data = {"name": name, "surname": surname, "email": email, "password": password}
-        User.register_user(client_data)   
-  
-    try:
-        data = ()
-        new_user = User.register_user(data)
+        new_user = User.register_user(client_data)
+        
         user_data = {
-            'id': new_user.id,
-            'name': new_user.name,
-            'email': new_user.email,
-            'created_at': new_user.created_at.isoformat(),
-            'updated_at': new_user.updated_at.isoformat()
+            "id": new_user.id,
+            "name": new_user.name,
+            "surname": new_user.surname,
+            "email": new_user.email,
+            "created_at": new_user.created_at.isoformat(),
+            "updated_at": new_user.updated_at.isoformat()
         }
         return jsonify(user_data), 201
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+   
+  
+    # try:
+    #     data = ()
+    #     new_user = User.register_user(data)
+    #     user_data = {
+    #         'id': new_user.id,
+    #         'name': new_user.name,
+    #         'email': new_user.email,
+    #         'created_at': new_user.created_at.isoformat(),
+    #         'updated_at': new_user.updated_at.isoformat()
+    #     }
+    #     return jsonify(user_data), 201
+    # except Exception as e:
+    #     return jsonify({'error': str(e)}), 500
     
     
    

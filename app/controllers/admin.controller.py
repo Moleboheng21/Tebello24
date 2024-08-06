@@ -1,4 +1,4 @@
-from flask import flash, request, jsonify ,session
+from flask import jsonify, request
 from ..models.user import User
 
 
