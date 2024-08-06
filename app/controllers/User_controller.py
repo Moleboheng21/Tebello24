@@ -4,18 +4,21 @@ from ..models.user import User
 def signup():
     if request.method == "POST":
         # Declare variables
-        name = request.form["name"]
-        surname = request.form["surname"]
-        email = request.form["email"]
-        password = request.form["password"]
+        client_data = {
+            
+           "name": request.json.get("name"),
+           "surname": request.json.get("surname"),
+           "email": request.json.get("email"),
+           "password": request.json.get("password"),
+        }
         
-        # Check if the user exists in the database USING EMAIL
-        if User.user_exist(email):
-            flash("User with this email already exists.", "danger")
-            return jsonify({"error": "User with this email already exists."}), 400
+        # # Check if the user exists in the database USING EMAIL
+        # if User.user_exist(email):
+        #     flash("User with this email already exists.", "danger")
+        #     return jsonify({"error": "User with this email already exists."}), 400
         
-        # Adding user to the database
-        client_data = {"name": name, "surname": surname, "email": email, "password": password}
+        # # Adding user to the database
+        # client_data = {"name": name, "surname": surname, "email": email, "password": password}
         User.register_user(client_data)   
     return jsonify({"message": "User registered successfully."}), 201
     
