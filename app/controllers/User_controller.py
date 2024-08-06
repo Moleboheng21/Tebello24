@@ -1,52 +1,23 @@
-from bson import ObjectId
+from flask import flash, request, jsonify ,session
 from ..models.user import User
-from flask import flash, jsonify, request, redirect, url_for, render_template
-from .. import mongo
 
 def signup():
     if request.method == "POST":
         # Declare variables
-        data = request.get_json()
-        if not data:
-            return jsonify({"error": "No data provided."}), 400
-        
-        name = data.get("name")
-        surname = data.get("surname")
-        email = data.get("email")
-        password = data.get("password")
+        name = request.form["name"]
+        surname = request.form["surname"]
+        email = request.form["email"]
+        password = request.form["password"]
         
         # Check if the user exists in the database USING EMAIL
-        if User.register_user(email):
-            return jsonify({"error": "User with this email already exists."}), 409
+        if User.user_exist(email):
+            flash("User with this email already exists.", "danger")
+            return jsonify({"error": "User with this email already exists."}), 400
         
         # Adding user to the database
         client_data = {"name": name, "surname": surname, "email": email, "password": password}
-        new_user = User.register_user(client_data)
-        
-        user_data = {
-            "id": new_user.id,
-            "name": new_user.name,
-            "surname": new_user.surname,
-            "email": new_user.email,
-            "created_at": new_user.created_at.isoformat(),
-            "updated_at": new_user.updated_at.isoformat()
-        }
-        return jsonify(user_data), 201
-   
-  
-    # try:
-    #     data = ()
-    #     new_user = User.register_user(data)
-    #     user_data = {
-    #         'id': new_user.id,
-    #         'name': new_user.name,
-    #         'email': new_user.email,
-    #         'created_at': new_user.created_at.isoformat(),
-    #         'updated_at': new_user.updated_at.isoformat()
-    #     }
-    #     return jsonify(user_data), 201
-    # except Exception as e:
-    #     return jsonify({'error': str(e)}), 500
+        User.register_user(client_data)   
+    return jsonify({"message": "User registered successfully."}), 201
     
     
    
