@@ -8,4 +8,4 @@ app = Blueprint('products', __name__)
 
 app.route("/signup", methods=['POST','GET'])(User_controller.signup)
 
-# app.route("/login", methods=['POST','GET'])(User_controller.login)
+app.route("/login", methods=['POST','GET'])(User_controller.login)

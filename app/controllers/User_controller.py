@@ -1,5 +1,6 @@
 from flask import flash, request, jsonify ,session
 from ..models.user import User
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required
 
 def signup():
     if request.method == "POST":
@@ -23,24 +24,37 @@ def signup():
     return jsonify({"message": "User registered successfully."}), 201
     
     
+    
    
-# def login():
-#     if request.method == "POST":
-#         user_id = request.form.get("id")
-#         email = request.form["email"]
-#         password = request.form["password"]
-
-#         # Check if the user exists in the database
-#         user = User.user_exist(email=email)()
+def login():
+    if request.method == "POST":
+        user_id= "user_id"
+        client_details = {
+                
+           "email": request.json.get("email"),
+           "password": request.json.get("password"),
+        }
         
-#         if user and User.login_user(password):
-#             session['user_id'] = (user_id)
-#             return jsonify({"message": "Login successful."}), 200
-#         else:
-#             flash("Invalid email or password.", "danger")
-#             return jsonify({"error": "Invalid email or password."}), 401
+        User.login_user(client_details,user_id)
+        session['user_id'] = ()
+        return jsonify({"message": "Login successful."}), 200
+    else:
+        return jsonify({"error": "Method not allowed."}), 405
+    
+    
+def login():
+    data = request.get_json()
+    username = data['username']
+    password = data['password']
+    print('Received data:', username , password)
 
-#     return jsonify({"error": "Method not allowed."}), 405
+    user = User.query.filter_by(username=username).first()
+
+    if user and bcrypt.check_password_hash(user.password, password):
+        access_token = create_access_token(identity=user.id)
+        return jsonify({'message': 'Login Success', 'access_token': access_token})
+    else:
+        return jsonify({'message': 'Login Failed'}), 401
 
 
 
