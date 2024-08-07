@@ -1,6 +1,7 @@
 {
     "cSpell.words": [
         "jsonify",
-        "pymongo"
+        "pymongo",
+        "werkzeug"
     ]
 }
